@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          crossorigin="anonymous"
+          th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}"
+    />
+
+    <script src="/webjars/jquery/1.11.1/jquery.min.js"></script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"
+            th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}">
+    </script>
+    <script>
+
+        function validarPage() {
+            return false;
+        }
+
+        function guardar(){
+
+            var _cell_sessionPeriod = document.getElementById("sessionPeriod").value;
+            var _cell_timeSelectHour_object = document.getElementById("timeSelectHour");
+            var _cell_timeSelectHour_Text = _cell_timeSelectHour_object.options[_cell_timeSelectHour_object.selectedIndex].innerHTML;
+
+            var _cell_timeSelectMinute_object = document.getElementById("timeSelectMinute");
+            var _cell_timeSelectMinute_Text = _cell_timeSelectMinute_object.options[_cell_timeSelectMinute_object.selectedIndex].innerHTML;
+
+            var _cell_listActivitiesObject = document.getElementById("listActivities");
+            var _cell_listActivities_Text = _cell_listActivitiesObject.options[_cell_listActivitiesObject.selectedIndex].innerHTML;
+            var _cell_listActivities_ID = _cell_listActivitiesObject.value;
+
+            if (_cell_sessionPeriod.trim()== '') {
+                alert("Please, you need to select all values before adding anything");
+                return false;
+            }
+
+            if (_cell_timeSelectHour_Text.trim()== '') {
+                alert("Please, you need to select all values before adding anything");
+                return false;
+            }
+
+            if (_cell_timeSelectMinute_Text.trim()== '') {
+                alert("Please, you need to select all values before adding anything");
+                return false;
+            }
+
+            if (_cell_listActivities_Text.trim()== '') {
+                alert("Please, you need to select all values before adding anything");
+                return false;
+            }
+
+            if (
+                ( (_cell_sessionPeriod == "Afternoon")&&(_cell_timeSelectHour_Text == "09") ) ||
+                ( (_cell_sessionPeriod == "Afternoon")&&(_cell_timeSelectHour_Text == "10") ) ||
+                ( (_cell_sessionPeriod == "Afternoon")&&(_cell_timeSelectHour_Text == "11") )
+            )
+            {
+                alert("You only can select 1, 2, 3 or 4 in the Afternoon");
+                return false;
+            }
+
+            if (
+                ( (_cell_sessionPeriod == "Morning")&&(_cell_timeSelectHour_Text == "01") ) ||
+                ( (_cell_sessionPeriod == "Morning")&&(_cell_timeSelectHour_Text == "02") ) ||
+                ( (_cell_sessionPeriod == "Morning")&&(_cell_timeSelectHour_Text == "03") ) ||
+                ( (_cell_sessionPeriod == "Morning")&&(_cell_timeSelectHour_Text == "04") )
+            )
+            {
+                alert("You only can select 9, 10 or 11 in the Morning");
+                return false;
+            }
+
+            if ((_cell_sessionPeriod == "Morning")&&(_cell_timeSelectHour_Text == "11")&&(_cell_timeSelectMinute_Text == "55") ){
+                alert("It's not possible selected this time, because you will have your lunch in 5 minutes!");
+                return false;
+            }
+
+            //alert("Ingrese nombre del producto " + listActivitiesObject_id);
+            //alert("Ingrese nombre del producto: " + _nom);
+            //alert("Ingrese nombre del producto: " + _cat);
+            // if(_stock.trim()==''){
+            //     alert("Ingrese stock del producto");
+            // }
+
+            //var fila="<tr><td>"+_nom+"</td><td>"+_cat+"</td><td>"+_precio+"</td><td>"+_stock+"</td></tr>";
+            var idHipervincul = ("actID_"  + _cell_listActivities_ID).trim();
+
+            //let formValues = {};
+            var form1vals = document.forms["fomul"].getElementsByTagName("a");
+            //var ipt = 0;
+            //alert("cantidad = " + form1vals.length);
+            for (var ipt =0; ipt < form1vals.length; ipt++) {
+                var arrgloAtach = new Array();
+                arrgloAtach = form1vals[ipt].toString().replace("delete", "").trim().split("/");
+                //alert("arrgloAtach = " + arrgloAtach);
+                //alert("caantidadElementos = " + arrgloAtach.length);
+                //alert("arrgloAtachvalor = " + arrgloAtach[ipt].toString().trim());
+                //return false;
+                //alert("valor actual = " + arrgloAtach[arrgloAtach.length - 2]);
+
+                if (arrgloAtach[arrgloAtach.length - 1] == "#") {
+                    continue;
+                }
+
+                if ( (arrgloAtach != null)&&(arrgloAtach.length > 0) && (arrgloAtach[arrgloAtach.length - 2] != "#") && (arrgloAtach[arrgloAtach.length - 2].toString().trim() != "") ) {
+                    var id_actividd = arrgloAtach[arrgloAtach.length - 2].toString().trim().replace("actID_", "");
+
+                    //alert("id_actividd = " + id_actividd);
+                    //alert("_cell_listActivities_ID = " + _cell_listActivities_ID);
+
+                    if (id_actividd.toString().trim() == _cell_listActivities_ID.toString().trim() ) {
+                        alert("You already added this activity in a session!");
+                        return false;
+                    }
+
+                    /*
+                    var id_actividd = arrgloAtach[arrgloAtach.length - 1].toString().trim().replace("actID_", "");
+                    //alert("id_actividdo = " + id_actividd.toString().trim());
+                    //alert("_cell_listActivities_ID = " + _cell_listActivities_ID.toString().trim());
+                    if (id_actividd.toString().trim() == _cell_listActivities_ID.toString().trim() ) {
+                        alert("You already added this activity in a session!");
+                        return false;
+                    }
+                    */
+                }
+                // alert("valor = " + form1vals[ipt]);
+            }
+
+            /*
+
+            var fila = "<tr>";
+            fila +="     <td style='padding-left: 8px; padding-bottom: 8px; padding-top: 8px; padding-right: 8px; vertical-align: top;'>" + 1 + "</td>";
+            fila +="     <td style='padding-left: 8px; padding-bottom: 8px; padding-top: 8px; padding-right: 8px; vertical-align: top;'>" + _cell_sessionPeriod + "</td>";
+            fila +="     <td style='padding-left: 8px; padding-bottom: 8px; padding-top: 8px; padding-right: 8px; vertical-align: top;'>" + _cell_timeSelectHour_Text + ":" + _cell_timeSelectMinute_Text + "</td>";
+            fila +="     <td style='padding-left: 8px; padding-bottom: 8px; padding-top: 8px; padding-right: 8px; vertical-align: top;'>" + _cell_listActivities_Text + "</td>";
+            fila +="     <td style='padding-left: 8px; padding-bottom: 8px; padding-top: 8px; padding-right: 8px; vertical-align: top;'><a href='/recipe/" + idHipervincul + "'>delete</a></td>";
+            //fila +="     <td style='padding-left: 8px; padding-bottom: 8px; padding-top: 8px; padding-right: 8px; vertical-align: top;'><a href='#' id ='" + idHipervincul + "'>delete</a></td>";
+
+            fila +="</tr>";
+
+            // document.getElementById("tablaGrid").innerHTML = fila;
+
+            //document.getElementById("tablaGrid").innerText = fila;
+
+            var btn = document.createElement("TR");
+            btn.innerHTML=fila;
+            if (_cell_sessionPeriod == "Morning") {
+                document.getElementById("tablaGrid_befor").appendChild(btn);
+            }
+            else  {
+                document.getElementById("tablaGrid_after").appendChild(btn);
+            }
+
+            */
+
+            return true;
+        }
+
+    </script>
+
+    <script>
+        (function ($) {
+
+            $(document).ready(function () {
+
+                $('#confirm-accionJC').on('show.bs.modal', function (e) {
+
+                    var miHeader = '<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h2 class="modal-title" id="myModalLabel">Reportes de la Operación</h2></div>';
+                    var miCuerpo = '<div class="modal-body"><p>¿Esta seguro(a) que desea continuar?</p></div>';
+                    var miPie = '';
+
+                    miPie += '<div class="modal-footer">';
+                    miPie +=    '<div style="padding: 30px;">';
+                    miPie +=        '<div style="float: right">';
+                    miPie +=            '<button class="cancel btn" type="button" data-dismiss="modal" style="min-width: 90px" >No</button>';
+                    miPie +=        '</div>';
+                    miPie +=        '<div style="display:block; width: 70px; float: right" id="div_G">';
+                    //miPie +=            '<a style="margin: 0 auto; width:50px" id="Link_G" class="btn btn-primary" data-dismiss="modal" data-toggle="confirmAccionJC">Si</a>';
+                    miPie +=        '</div>';
+                    miPie +=    '</div>';
+                    miPie += '</div>';
+
+                    $("#confirm-accionJC").html(miHeader + miCuerpo + miPie);
+                    $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+
+                    //$('.debug-url').html('Delete URL: <strong>' + $(this).find('.btnJC-ok').attr('href') + '</strong>');
+                });
+            });
+        })(jQuery);
+
+    </script>
+
+</head>
+<body>
+
+<!--/*@thymesVar id="dataDetailObject" type="com.scopefirst.domain.DataDetail"*/-->
+<!--/*@thymesVar id="timeSelectHour" type="java.util.Map<java.lang.Integer, java.lang.String>"*/-->
+<!--/*@thymesVar id="timeSelectMinute" type="java.util.Map<java.lang.Integer, java.lang.String>"*/-->
+<div class="container-fluid" style="margin-top: 20px">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <form  th:object="${dataDetailObject}" th:action="@{/dataDetailObject/}" method="post" id="fomul">
+                <input type="hidden" id="hiddenTemp" value=""/>
+                <input type="hidden" th:field="*{id}"/>
+
+                <div style="padding-bottom: 10px;">
+                    <a href="#" th:href="@{'/returnBack'}" style="padding-right: 40px; padding-left: 0px; padding-top: 20px;">
+                        <- return to index
+                    </a>
+                </div>
+
+                <div th:if="${mysessionErr != null}" class="alert alert-danger">
+                    <p>Exists some errors, please check below:</p>
+                    <ul>
+                        <!--li th:text="${dataDetailObject.messageError}"/-->
+                        <li th:text="${mysessionErr}"/>
+                    </ul>
+                </div>
+
+                <div class="pannel-group">
+                    <div class="panel panel-primary">
+
+                        <div class="panel-heading">
+                            <h1 class="panel-title">Configuration of the track</h1>
+                        </div>
+                        <div class="panel-body">
+
+                            <div class="row">
+                                <div class="col-md-3 form-group">
+                                    <label>Turno:</label>
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    <select class="form-control" th:field="*{sessionPeriod}">
+                                        <option value=""></option>
+                                        <option th:each="sessionPeriodValue : ${T(com.scopefirst.domain.SessionPeriod).values()}"
+                                                th:value="${sessionPeriodValue.name()}"
+                                                th:text="${sessionPeriodValue.name()}"
+                                        >val</option>
+                                    </select>
+                                    <select class="form-control" th:remove="all">
+                                        <option></option>
+                                        <option>Morning1</option>
+                                        <option>Afternoon1</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 form-group">
+                                    <label>Select activity:</label>
+                                </div>
+                                <div class="col-md-9 form-group">
+                                    <select class="form-control" th:field="*{listActivities}">
+                                        <option value=""></option>
+                                        <option th:each="entry : ${dataDetailObject.listActivities}"
+                                                th:value="${entry.id}"
+                                                th:text="${entry.description}"
+                                        ></option>
+                                    </select>
+                                    <select class="form-control" th:remove="all">
+                                        <option></option>
+                                        <option>Create better mocks for Spring Boot</option>
+                                        <option>Managing dependencies with Maven</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-3 form-group">
+                                    <label>Select time:</label>
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <select class="form-control" th:field="*{timeSelectHour}">
+                                                    <option value=""></option>
+                                                    <option th:each="entry : ${timeSelectHour.entrySet()}"
+                                                            th:value="${entry.key}"
+                                                            th:text="${entry.value}"
+                                                    ></option>
+                                                </select>
+                                                <select class="form-control" th:remove="all">
+                                                    <option></option>
+                                                    <option>9</option>
+                                                    <option>10</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select class="form-control" th:field="*{timeSelectMinute}">
+                                                    <option value=""></option>
+                                                    <option th:each="entry : ${timeSelectMinute.entrySet()}"
+                                                            th:value="${entry.key}"
+                                                            th:text="${entry.value}"
+                                                    ></option>
+                                                </select>
+                                                <select class="form-control" th:remove="all">
+                                                    <option></option>
+                                                    <option>5</option>
+                                                    <option>55</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-1">
+                                    <button type="submit" class="btn btn-primary" onclick="return guardar();">Add</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-primary">
+
+                        <div class="panel-heading">
+                            <h1 class="panel-title">List of items in the track - Morning</h1>
+                        </div>
+                        <div class="panel-body">
+                            <div class="table-responsive" >
+                                <table class="table table-hover" id="tablaGrid_befor">
+                                    <thead class="thead-inverse">
+                                    <tr>
+                                        <th>Sesion</th>
+                                        <th>Hour_Initial</th>
+                                        <th>Description</th>
+                                        <th>Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tr th:each="myDataGrid: ${dataDetailObject.myTableMorning}">
+                                        <!--/*@thymesVar id="myDataGrid" type="com.scopefirst.domain.DataGridObject"*/-->
+                                        <td th:text="${myDataGrid.turno}">mañana</td>
+                                        <td th:text="@{${myDataGrid.hourInit} + ' - ' + ${myDataGrid.hourFin}}">09:15</td>
+                                        <td th:text="${myDataGrid.description}">prueba de codigo mañana</td>
+                                        <td>
+                                            <a href="#" th:href="@{'/dataDetail/' + ${dataDetailObject.id} + '/' + ${myDataGrid.id} + '/actID_' + ${myDataGrid.dataInputId} + '/delete'}">
+                                                delete
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr th:remove="all">
+                                        <td>hi 1</td>
+                                        <td>hi 2</td>
+                                        <td>hi 3</td>
+                                        <td><a href="#">delete</a></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-primary">
+
+                        <div class="panel-heading">
+                            <h1 class="panel-title">List of items in the track - afternoon</h1>
+                        </div>
+                        <div class="panel-body">
+                            <div class="table-responsive" >
+                                <table class="table table-hover" id="tablaGrid_after">
+                                    <thead class="thead-inverse">
+                                    <tr>
+                                        <th>Sesion</th>
+                                        <th>Hour_Initial</th>
+                                        <th>Description</th>
+                                        <th>Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tr th:each="myDataGrid: ${dataDetailObject.myTableAfternoon}">
+                                        <!--/*@thymesVar id="myDataGrid" type="com.scopefirst.domain.DataGridObject"*/-->
+                                        <td th:text="${myDataGrid.turno}">tarde</td>
+                                        <td th:text="@{${myDataGrid.hourInit} + ' - ' + ${myDataGrid.hourFin}}">10:10</td>
+                                        <td th:text="${myDataGrid.description}">Prueba de codigo</td>
+                                        <td>
+                                            <a href="#" th:href="@{'/dataDetail/' + ${dataDetailObject.id} + '/' + ${myDataGrid.id} + '/actID_' + ${myDataGrid.dataInputId} + '/delete'}">
+                                                delete
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr th:remove="all">
+                                        <td>hi 2</td>
+                                        <td>hi 3</td>
+                                        <td>hi 4</td>
+                                        <td><a href="#">delete</a></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

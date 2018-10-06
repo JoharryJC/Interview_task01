@@ -1,0 +1,19 @@
+Conversation with the client 65min
+Walking to the client office 40min
+Evaluate better technology in the cloud 30min
+Installation of tools in the Server 45min
+Managing dependencies Maven Project 45min
+Download tools from Internet 60min
+Buying new components for the Server in Saturn 45min
+Register activities in Microsoft Project 45min
+Making checklist about every activity 30min
+Select people for the project 30min
+Explanation about the Project 45min
+Elaboration of the Documentation 60min
+Meeting with users about new benefits in app 60min
+Creation of new classes in the existing project 30min
+Testing in the code 30min
+Incorporate new functionalities in the code 60min
+Integration in the banking core 30min
+Establish comparison between new and old version 30min
+Development of screens in paper 30min
